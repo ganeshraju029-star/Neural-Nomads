@@ -1,0 +1,22 @@
+# One-liner commands to install Chocolatey on Windows
+
+## Method 1: PowerShell (Recommended)
+# Run this command in PowerShell as Administrator:
+
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+## Method 2: Command Prompt (cmd)
+# Run this command in Command Prompt as Administrator:
+
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+
+## Method 3: Using winget (Windows Package Manager)
+# If you have Windows 11 or Windows 10 with App Installer:
+
+winget install chocolatey.chocolatey
+
+## After installation, verify with:
+choco --version
+
+## Common packages for development:
+choco install git python nodejs vscode tor openssl -y

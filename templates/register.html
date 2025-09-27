@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration - Military Secure Messaging</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .registration-form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            border: 2px solid var(--accent-color);
+            background: rgba(26, 26, 26, 0.9);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: black;
+            border: 1px solid var(--accent-color);
+            color: #00ff41;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+        
+        .form-group input::placeholder {
+            color: rgba(0, 255, 65, 0.6);
+        }
+        
+        .security-notice {
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid var(--warning-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            color: var(--warning-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 User Registration</h1>
+            <p>Generate your cryptographic identity</p>
+        </div>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <div class="security-notice">
+            <strong>⚠️ SECURITY NOTICE:</strong> Your identity will be protected by military-grade cryptography. 
+            Save your QR code and fingerprint securely. Loss of this data means permanent loss of access.
+        </div>
+        
+        <form method="POST" class="registration-form">
+            <div class="form-group">
+                <label for="user_id">User ID:</label>
+                <input type="text" id="user_id" name="user_id" required 
+                       placeholder="Enter unique user identifier" maxlength="50">
+            </div>
+            
+            <div class="form-group">
+                <label for="alias">Alias (Optional):</label>
+                <input type="text" id="alias" name="alias" 
+                       placeholder="Display name for contacts" maxlength="50">
+            </div>
+            
+            <button type="submit" class="btn">🔑 Generate Identity</button>
+        </form>
+        
+        <div class="action-buttons">
+            <a href="/" class="btn">🏠 Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

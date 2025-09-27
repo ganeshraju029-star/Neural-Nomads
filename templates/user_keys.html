@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Keys Generated - Military Secure Messaging</title>
+    <style>
+        .keys-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            border: 2px solid var(--accent-color);
+            background: rgba(26, 26, 26, 0.9);
+        }
+        
+        .qr-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid var(--accent-color);
+            background: white;
+        }
+        
+        .fingerprint {
+            font-family: monospace;
+            background: black;
+            padding: 15px;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            word-break: break-all;
+            margin: 15px 0;
+        }
+        
+        .warning-box {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid var(--danger-color);
+            padding: 20px;
+            margin: 20px 0;
+            color: var(--danger-color);
+        }
+        
+        .key-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .key-card {
+            border: 1px solid var(--accent-color);
+            padding: 15px;
+            background: rgba(0, 255, 65, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔑 Cryptographic Identity Generated</h1>
+            <p>Your military-grade security credentials</p>
+        </div>
+        
+        <div class="warning-box">
+            <strong>⚠️ CRITICAL SECURITY WARNING:</strong><br>
+            Save your QR code and fingerprint immediately. This information cannot be recovered if lost.
+            Share your QR code only with trusted contacts for secure communication.
+        </div>
+        
+        <div class="keys-container">
+            <h3>Your Security Credentials</h3>
+            
+            <div class="key-info">
+                <div class="key-card">
+                    <h4>User Information</h4>
+                    <p><strong>User ID:</strong> {{ user_data.user_id }}</p>
+                    <p><strong>Alias:</strong> {{ user_data.alias or 'None' }}</p>
+                    <p><strong>Created:</strong> {{ user_data.public_keys.created_at | datetime if user_data.public_keys.created_at else 'Just now' }}</p>
+                </div>
+                
+                <div class="key-card">
+                    <h4>Security Features</h4>
+                    <p>✓ Signal Protocol Encryption</p>
+                    <p>✓ Forward Secrecy</p>
+                    <p>✓ Digital Signatures</p>
+                    <p>✓ Key Rotation</p>
+                </div>
+            </div>
+            
+            <h4>QR Code for Key Sharing</h4>
+            <div class="qr-section">
+                <img src="data:image/png;base64,{{ user_data.qr_code }}" alt="QR Code" style="max-width: 300px;">
+                <p style="color: black; margin-top: 10px;"><strong>Share this QR code with trusted contacts</strong></p>
+            </div>
+            
+            <h4>Key Fingerprint for Verification</h4>
+            <div class="fingerprint">
+                {{ user_data.fingerprint }}
+            </div>
+            <p><small>Use this fingerprint to verify your identity with contacts</small></p>
+            
+            <div class="key-info">
+                <div class="key-card">
+                    <h4>Next Steps</h4>
+                    <ol>
+                        <li>Save your QR code image</li>
+                        <li>Share fingerprint with contacts</li>
+                        <li>Verify contact fingerprints</li>
+                        <li>Start secure messaging</li>
+                    </ol>
+                </div>
+                
+                <div class="key-card">
+                    <h4>Security Tips</h4>
+                    <ul>
+                        <li>Never share private keys</li>
+                        <li>Verify fingerprints in person</li>
+                        <li>Rotate keys regularly</li>
+                        <li>Use only trusted networks</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/send_message" class="btn">📝 Send First Message</a>
+            <a href="/status" class="btn">📊 View System Status</a>
+            <a href="/" class="btn">🏠 Back to Home</a>
+        </div>
+    </div>
+    
+    <script>
+        // Download QR code
+        function downloadQR() {
+            const img = document.querySelector('.qr-section img');
+            const link = document.createElement('a');
+            link.download = 'secure-keys-qr.png';
+            link.href = img.src;
+            link.click();
+        }
+        
+        // Copy fingerprint
+        function copyFingerprint() {
+            const fingerprint = document.querySelector('.fingerprint').textContent;
+            navigator.clipboard.writeText(fingerprint).then(() => {
+                alert('Fingerprint copied to clipboard');
+            });
+        }
+        
+        // Add download button
+        const qrSection = document.querySelector('.qr-section');
+        const downloadBtn = document.createElement('button');
+        downloadBtn.textContent = '💾 Download QR Code';
+        downloadBtn.className = 'btn';
+        downloadBtn.onclick = downloadQR;
+        qrSection.appendChild(downloadBtn);
+        
+        // Add copy button
+        const fingerprintDiv = document.querySelector('.fingerprint');
+        const copyBtn = document.createElement('button');
+        copyBtn.textContent = '📋 Copy Fingerprint';
+        copyBtn.className = 'btn';
+        copyBtn.onclick = copyFingerprint;
+        copyBtn.style.marginTop = '10px';
+        fingerprintDiv.parentNode.insertBefore(copyBtn, fingerprintDiv.nextSibling);
+    </script>
+</body>
+</html>

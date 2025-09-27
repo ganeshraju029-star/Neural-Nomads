@@ -1,0 +1,16 @@
+Flask
+PyNaCl
+cryptography
+scikit-learn
+numpy
+blinker
+qrcode[pil]
+PySocks
+stem
+psutil
+werkzeug
+jinja2
+requests
+# Windows-specific packages (optional)
+pywin32; sys_platform == "win32"
+wmi; sys_platform == "win32"

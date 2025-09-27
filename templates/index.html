@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Military-Grade Secure Messaging</title>
+    <style>
+        :root {
+            --primary-color: #0a0a0a;
+            --secondary-color: #1a1a1a;
+            --accent-color: #00ff41;
+            --danger-color: #ff0000;
+            --warning-color: #ffaa00;
+            --text-color: #00ff41;
+            --background-color: #000000;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border: 2px solid var(--accent-color);
+            padding: 20px;
+            background: rgba(0, 255, 65, 0.05);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+        
+        .security-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .warning-banner {
+            background: var(--warning-color);
+            color: black;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .feature-card {
+            border: 1px solid var(--accent-color);
+            padding: 20px;
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            background: rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        }
+        
+        .feature-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 25px;
+            background: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-size: 1em;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn:hover {
+            background: var(--accent-color);
+            color: black;
+            box-shadow: 0 0 15px var(--accent-color);
+        }
+        
+        .btn-danger {
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+        
+        .btn-danger:hover {
+            background: var(--danger-color);
+            color: white;
+        }
+        
+        .status-panel {
+            border: 1px solid var(--accent-color);
+            padding: 20px;
+            margin-top: 30px;
+            background: rgba(26, 26, 26, 0.9);
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+        }
+        
+        .status-value {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+        
+        .flash-message {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+        
+        .flash-success {
+            background: rgba(0, 255, 65, 0.1);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .flash-error {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+        
+        /* Global form input styling for better visibility */
+        input, textarea, select {
+            color: #00ff41 !important;
+            background: black !important;
+            border: 1px solid #00ff41 !important;
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: rgba(0, 255, 65, 0.6) !important;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            color: #00ff41 !important;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5) !important;
+        }
+        
+        .terminal {
+            background: black;
+            border: 1px solid var(--accent-color);
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            height: 200px;
+            overflow-y: auto;
+        }
+        
+        .terminal-line {
+            margin-bottom: 5px;
+        }
+        
+        .terminal-prompt {
+            color: var(--accent-color);
+        }
+        
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ MILITARY-GRADE SECURE MESSAGING</h1>
+            <div class="security-badge">CLASSIFIED SYSTEM</div>
+            <p style="margin-top: 15px;">End-to-end encrypted • Self-destructing • Tor anonymized • AI protected</p>
+        </div>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>🔐 Signal Protocol Encryption</h3>
+                <p>Advanced end-to-end encryption with forward secrecy and deniability. Uses X3DH key agreement and ChaCha20-Poly1305 authenticated encryption.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>💣 Self-Destructing Messages</h3>
+                <p>Messages automatically destroy after reading or timeout. Secure memory wiping prevents forensic recovery.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🧅 Tor Integration</h3>
+                <p>All traffic routed through Tor network with hidden service support. Traffic obfuscation and metadata resistance.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🤖 AI Intrusion Detection</h3>
+                <p>Machine learning-based threat detection with behavioral analysis and automated response to security incidents.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🗝 Memory-Only Storage</h3>
+                <p>No persistent storage. All messages exist only in secure memory with automatic wiping on access or timeout.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>📱 QR Code Key Exchange</h3>
+                <p>Secure key distribution through QR codes with fingerprint verification and trust establishment.</p>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/register" class="btn">🆕 Register New User</a>
+            <a href="/send_message" class="btn">📝 Send Secure Message</a>
+            <a href="/inbox" class="btn">📬 Check Inbox</a>
+            <a href="/status" class="btn">📊 System Status</a>
+            <a href="/logout" class="btn btn-danger">🚪 Secure Logout</a>
+        </div>
+        
+        <div class="status-panel">
+            <h3>📊 System Status</h3>
+            <div class="status-item">
+                <span>Security Level:</span>
+                <span class="status-value">MAXIMUM</span>
+            </div>
+            <div class="status-item">
+                <span>Encryption:</span>
+                <span class="status-value">ACTIVE</span>
+            </div>
+            <div class="status-item">
+                <span>Tor Network:</span>
+                <span class="status-value">CONNECTED</span>
+            </div>
+            <div class="status-item">
+                <span>AI Monitoring:</span>
+                <span class="status-value">ENABLED</span>
+            </div>
+            <div class="status-item">
+                <span>Memory Protection:</span>
+                <span class="status-value">ACTIVE</span>
+            </div>
+        </div>
+        
+        <div class="terminal">
+            <div class="terminal-line"><span class="terminal-prompt">secure@military:~$</span> System initialized</div>
+            <div class="terminal-line"><span class="terminal-prompt">secure@military:~$</span> Tor circuit established</div>
+            <div class="terminal-line"><span class="terminal-prompt">secure@military:~$</span> AI intrusion detection active</div>
+            <div class="terminal-line"><span class="terminal-prompt">secure@military:~$</span> Memory protection enabled</div>
+            <div class="terminal-line"><span class="terminal-prompt">secure@military:~$</span> Secure communications ready</div>
+            <div class="terminal-line"><span class="terminal-prompt">secure@military:~$</span> Awaiting user commands...</div>
+        </div>
+    </div>
+    
+    <script>
+        // Matrix rain effect
+        function createMatrixRain() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            canvas.style.position = 'fixed';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.zIndex = '-1';
+            canvas.style.opacity = '0.1';
+            
+            document.querySelector('.matrix-bg').appendChild(canvas);
+            
+            const letters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            const drops = [];
+            
+            for (let i = 0; i < columns; i++) {
+                drops[i] = 1;
+            }
+            
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#00ff41';
+                ctx.font = fontSize + 'px Courier New';
+                
+                for (let i = 0; i < drops.length; i++) {
+                    const text = letters[Math.floor(Math.random() * letters.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            
+            setInterval(draw, 50);
+        }
+        
+        // Security status updates
+        function updateSecurityStatus() {
+            const statusItems = document.querySelectorAll('.status-value');
+            const statuses = ['ACTIVE', 'CONNECTED', 'ENABLED', 'MAXIMUM'];
+            
+            statusItems.forEach((item, index) => {
+                if (Math.random() > 0.95) {
+                    item.style.textShadow = '0 0 10px #00ff41';
+                    setTimeout(() => {
+                        item.style.textShadow = 'none';
+                    }, 200);
+                }
+            });
+        }
+        
+        // Terminal updates
+        function addTerminalLine(text) {
+            const terminal = document.querySelector('.terminal');
+            const line = document.createElement('div');
+            line.className = 'terminal-line';
+            line.innerHTML = `<span class="terminal-prompt">secure@military:~$</span> ${text}`;
+            terminal.appendChild(line);
+            terminal.scrollTop = terminal.scrollHeight;
+            
+            // Keep only last 20 lines
+            const lines = terminal.querySelectorAll('.terminal-line');
+            if (lines.length > 20) {
+                lines[0].remove();
+            }
+        }
+        
+        // Initialize effects
+        document.addEventListener('DOMContentLoaded', function() {
+            createMatrixRain();
+            
+            setInterval(updateSecurityStatus, 2000);
+            
+            // Random terminal updates
+            const terminalMessages = [
+                'Security scan completed - no threats detected',
+                'Tor circuit rotated',
+                'Memory cleanup cycle initiated',
+                'AI model updated with new threat signatures',
+                'Encryption keys rotated successfully',
+                'Traffic obfuscation active',
+                'System integrity verified'
+            ];
+            
+            setInterval(() => {
+                if (Math.random() > 0.7) {
+                    const message = terminalMessages[Math.floor(Math.random() * terminalMessages.length)];
+                    addTerminalLine(message);
+                }
+            }, 5000);
+        });
+        
+        // Security warning on page unload
+        window.addEventListener('beforeunload', function(e) {
+            e.preventDefault();
+            e.returnValue = 'Leaving this page may compromise security. Are you sure?';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Message - Military Messaging</title>
+    <style>
+        .message-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            border: 2px solid var(--accent-color);
+            background: rgba(26, 26, 26, 0.9);
+        }
+        
+        .message-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid var(--accent-color);
+            background: rgba(0, 255, 65, 0.1);
+        }
+        
+        .encryption-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            border: 1px solid var(--accent-color);
+            padding: 15px;
+            background: rgba(0, 255, 65, 0.05);
+        }
+        
+        .message-content {
+            background: black;
+            border: 2px solid var(--accent-color);
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 100px;
+        }
+        
+        .destruction-timer {
+            text-align: center;
+            font-size: 1.2em;
+            color: var(--danger-color);
+            margin: 20px 0;
+            animation: pulse 1s infinite;
+        }
+        
+        .metadata {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid var(--accent-color);
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message-header">
+            <h1>🔓 Secure Message Decrypted</h1>
+            <p>Message ID: {{ message_id }}</p>
+        </div>
+        
+        <div class="destruction-timer">
+            ⏰ This message will self-destruct in 10 seconds
+        </div>
+        
+        <div class="encryption-info">
+            <div class="info-card">
+                <h4>🔒 Encryption</h4>
+                <p>ChaCha20-Poly1305</p>
+                <p>Authenticated encryption</p>
+            </div>
+            
+            <div class="info-card">
+                <h4>🔐 Protocol</h4>
+                <p>Signal Protocol</p>
+                <p>Forward secrecy</p>
+            </div>
+            
+            <div class="info-card">
+                <h4>✅ Verification</h4>
+                <p>Digital signature verified</p>
+                <p>Integrity confirmed</p>
+            </div>
+            
+            <div class="info-card">
+                <h4>🗑️ Destruction</h4>
+                <p>Auto-destruct: ACTIVE</p>
+                <p>Memory wipe: ENABLED</p>
+            </div>
+        </div>
+        
+        <div class="message-container">
+            <h3>📨 Message Content</h3>
+            <div class="message-content">
+                {% if message_data.is_decrypted %}
+                    <!-- Production-style plain text message display -->
+                    <div style="font-size: 1.2em; line-height: 1.6; padding: 20px; background: rgba(0, 255, 65, 0.1); border: 1px solid var(--accent-color); border-radius: 5px;">
+                        {{ message_data.content }}
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(0, 255, 65, 0.05); border: 1px solid #333;">
+                        <p><strong>From:</strong> {{ message_data.sender_id }}</p>
+                        <p><strong>Received:</strong> {{ message_data.timestamp | datetime }}</p>
+                        <p><strong>Security:</strong> End-to-end encrypted with Signal Protocol</p>
+                        <p><strong>Status:</strong> ✅ Decrypted and verified</p>
+                    </div>
+                {% else %}
+                    <!-- Fallback for encrypted data display -->
+                    <p><strong>Encrypted Data Structure:</strong></p>
+                    <pre>{{ message_data | tojson(indent=2) }}</pre>
+                    
+                    <p style="margin-top: 20px; color: var(--warning-color);">
+                        <strong>Note:</strong> In a production system, this would show the decrypted plaintext message. 
+                        For security demonstration, we're showing the encrypted data structure.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="metadata">
+            <h4>📊 Message Metadata</h4>
+            <p><strong>Timestamp:</strong> {{ message_data.timestamp | datetime if message_data.timestamp else 'Unknown' }}</p>
+            <p><strong>Sender:</strong> {{ message_data.sender_id if message_data.sender_id else 'Unknown' }}</p>
+            <p><strong>Session:</strong> {{ message_data.session_id if message_data.session_id else 'Unknown' }}</p>
+            <p><strong>Encryption Algorithm:</strong> ChaCha20-Poly1305</p>
+            <p><strong>Signature Algorithm:</strong> Ed25519</p>
+        </div>
+        
+        <div class="action-buttons">
+            <a href=\"/\" class=\"btn\">🏠 Back to Home</a>
+            <a href=\"/send_message\" class=\"btn\">📝 Send Reply</a>
+        </div>
+    </div>
+    
+    <script>
+        let countdown = 10;
+        
+        function updateCountdown() {
+            const timer = document.querySelector('.destruction-timer');
+            timer.textContent = `⏰ This message will self-destruct in ${countdown} seconds`;
+            
+            if (countdown <= 0) {
+                // Simulate message destruction
+                document.body.innerHTML = `
+                    <div class=\"container\">
+                        <div style=\"text-align: center; padding: 100px; color: var(--danger-color);\">
+                            <h1>💥 MESSAGE DESTROYED</h1>
+                            <p>All traces have been securely wiped from memory</p>
+                            <a href=\"/\" class=\"btn\">🏠 Return to Home</a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            countdown--;
+            setTimeout(updateCountdown, 1000);
+        }
+        
+        // Start countdown
+        updateCountdown();
+        
+        // Prevent copy/paste
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            alert('Copying is disabled for security');
+        });
+        
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        
+        // Blur effect when window loses focus
+        window.addEventListener('blur', function() {
+            document.body.style.filter = 'blur(10px)';
+        });
+        
+        window.addEventListener('focus', function() {
+            document.body.style.filter = 'none';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Secure Message - Military Messaging</title>
+    <style>
+        .message-form {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            border: 2px solid var(--accent-color);
+            background: rgba(26, 26, 26, 0.9);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: black;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            font-family: inherit;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            color: #00ff41;
+        }
+        
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: rgba(0, 255, 65, 0.6);
+        }
+        
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        
+        .security-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option-card {
+            border: 1px solid var(--accent-color);
+            padding: 15px;
+            background: rgba(0, 255, 65, 0.05);
+        }
+        
+        .encryption-status {
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid var(--accent-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Send Secure Message</h1>
+            <p>End-to-end encrypted • Self-destructing • Anonymous</p>
+        </div>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <div class="encryption-status">
+            <strong>🔒 ENCRYPTION STATUS: ACTIVE</strong><br>
+            Signal Protocol • ChaCha20-Poly1305 • Forward Secrecy
+        </div>
+        
+        <!-- Test Helper Section -->
+        <div class="test-helper" style="background: rgba(0, 255, 65, 0.1); border: 1px solid var(--accent-color); padding: 15px; margin-bottom: 20px;">
+            <h3>🧪 Testing Guide</h3>
+            <p><strong>Sample User IDs for testing:</strong></p>
+            <ul>
+                <li><code>alice</code> - Test user Alice</li>
+                <li><code>bob</code> - Test user Bob</li>
+                <li><code>charlie</code> - Test user Charlie</li>
+                <li><code>demo_user</code> - Default demo user</li>
+            </ul>
+            <p><small>💡 <strong>Tip:</strong> Use any of these recipient IDs, or create your own by registering new users first!</small></p>
+        </div>
+        
+        <form method="POST" class="message-form">
+            <div class="form-group">
+                <label for="recipient_id">Recipient User ID:</label>
+                <input type="text" id="recipient_id" name="recipient_id" required 
+                       placeholder="Enter recipient's user ID">
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Secure Message:</label>
+                <textarea id="message" name="message" required 
+                         placeholder="Enter your confidential message..."></textarea>
+                <button type="button" class="btn" onclick="fillSampleMessage()" style="margin-top: 10px; padding: 5px 10px; font-size: 0.8em;">
+                    📝 Fill Sample Message
+                </button>
+            </div>
+            
+            <div class="security-options">
+                <div class="option-card">
+                    <label for="ttl_minutes">Self-Destruct Timer:</label>
+                    <select id="ttl_minutes" name="ttl_minutes">
+                        <option value="1">1 minute</option>
+                        <option value="5" selected>5 minutes</option>
+                        <option value="15">15 minutes</option>
+                        <option value="30">30 minutes</option>
+                        <option value="60">1 hour</option>
+                    </select>
+                </div>
+                
+                <div class="option-card">
+                    <label>Access Limit:</label>
+                    <p>One-time read only<br><small>(Message destroys after reading)</small></p>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">🚀 Send Encrypted Message</button>
+        </form>
+        
+        <div class="action-buttons">
+            <a href="/" class="btn">🏠 Back to Home</a>
+            <a href="/status" class="btn">📊 System Status</a>
+        </div>
+    </div>
+    
+    <script>
+        // Fill sample message for testing
+        function fillSampleMessage() {
+            const messages = [
+                "Hello! This is a test of our secure messaging system. Can you receive this encrypted message? 🔒",
+                "Testing the self-destruct feature. This message should disappear after reading! 💣",
+                "Confidential information: The meeting is scheduled for tomorrow at 15:00. Please confirm receipt. 📅",
+                "Emergency protocol test: All systems operational. Awaiting confirmation of secure channel. 🚨",
+                "Quick test message to verify end-to-end encryption is working properly. ✅"
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            document.getElementById('message').value = randomMessage;
+        }
+        
+        // Character counter
+        const messageArea = document.getElementById('message');
+        const counter = document.createElement('div');
+        counter.style.color = 'var(--accent-color)';
+        counter.style.fontSize = '0.8em';
+        counter.style.marginTop = '5px';
+        messageArea.parentNode.appendChild(counter);
+        
+        messageArea.addEventListener('input', function() {
+            const remaining = 5000 - this.value.length;
+            counter.textContent = `Characters remaining: ${remaining}`;
+            if (remaining < 100) {
+                counter.style.color = 'var(--warning-color)';
+            } else {
+                counter.style.color = 'var(--accent-color)';
+            }
+        });
+        
+        // Security warnings
+        messageArea.addEventListener('input', function() {
+            const suspiciousPatterns = [
+                /password/i, /secret/i, /classified/i, /confidential/i
+            ];
+            
+            const hasSuspicious = suspiciousPatterns.some(pattern => 
+                pattern.test(this.value)
+            );
+            
+            if (hasSuspicious && !document.querySelector('.security-warning')) {
+                const warning = document.createElement('div');
+                warning.className = 'flash-message flash-error security-warning';
+                warning.textContent = '⚠️ Detected sensitive content. Ensure recipient identity is verified.';
+                this.parentNode.appendChild(warning);
+            }
+        });
+    </script>
+</body>
+</html>

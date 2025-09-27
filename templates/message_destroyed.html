@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Destroyed - Military Secure Messaging</title>
+    <style>
+        .destruction-notice {
+            text-align: center;
+            padding: 50px;
+            border: 2px solid var(--danger-color);
+            background: rgba(255, 0, 0, 0.1);
+            margin: 50px auto;
+            max-width: 600px;
+        }
+        
+        .destruction-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            color: var(--danger-color);
+            animation: pulse 2s infinite;
+        }
+        
+        .destruction-message {
+            font-size: 1.5em;
+            color: var(--danger-color);
+            margin-bottom: 20px;
+        }
+        
+        .security-note {
+            color: var(--accent-color);
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="destruction-notice">
+            <div class="destruction-icon">💥</div>
+            <div class="destruction-message">
+                MESSAGE DESTROYED
+            </div>
+            <p>This message has been permanently destroyed and cannot be recovered.</p>
+            <div class="security-note">
+                <strong>Security Features Active:</strong><br>
+                ✓ Memory wiped<br>
+                ✓ Encryption keys rotated<br>
+                ✓ No forensic traces left
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/" class="btn">🏠 Back to Home</a>
+            <a href="/send_message" class="btn">📝 Send New Message</a>
+        </div>
+    </div>
+</body>
+</html>

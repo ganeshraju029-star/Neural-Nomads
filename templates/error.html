@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Error - Military Secure Messaging</title>
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 50px;
+            border: 2px solid var(--danger-color);
+            background: rgba(255, 0, 0, 0.1);
+            margin: 50px auto;
+            max-width: 600px;
+        }
+        
+        .error-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            color: var(--danger-color);
+        }
+        
+        .error-message {
+            font-size: 1.5em;
+            color: var(--danger-color);
+            margin-bottom: 20px;
+        }
+        
+        .error-details {
+            background: black;
+            padding: 15px;
+            border: 1px solid var(--danger-color);
+            font-family: monospace;
+            text-align: left;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-container">
+            <div class="error-icon">⚠️</div>
+            <div class="error-message">
+                SYSTEM ERROR
+            </div>
+            <p>An error occurred while processing your request.</p>
+            
+            {% if error %}
+            <div class="error-details">
+                <strong>Error Details:</strong><br>
+                {{ error }}
+            </div>
+            {% endif %}
+            
+            <p style="color: var(--accent-color); margin-top: 20px;">
+                For security reasons, detailed error information is not displayed.
+                The system has been notified and will investigate.
+            </p>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/" class="btn">🏠 Back to Home</a>
+            <a href="/status" class="btn">📊 System Status</a>
+        </div>
+    </div>
+</body>
+</html>
