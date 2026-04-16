@@ -110,8 +110,13 @@ class MilitarySecureApp:
             # Initialize secure memory manager
             self.memory_manager = SecureMemoryManager()
             
-            # Initialize Tor integration
-            self.tor_integration = TorIntegration(flask_app_port=5001)
+            # Initialize Tor integration (with graceful fallback for serverless environments)
+            try:
+                self.tor_integration = TorIntegration(flask_app_port=5001)
+            except Exception as tor_error:
+                print(f"⚠ Tor integration unavailable: {tor_error}")
+                # Create a dummy Tor integration that doesn't fail
+                self.tor_integration = None
             
             # Initialize AI intrusion detection
             self.ids = AIIntrusionDetection()
@@ -298,7 +303,7 @@ class MilitarySecureApp:
                     
                     if success:
                         # Generate secure link
-                        onion_url = self.tor_integration.get_onion_url()
+                        onion_url = self.tor_integration.get_onion_url() if self.tor_integration else None
                         base_url = onion_url if onion_url else request.url_root
                         secure_link = f"{base_url}read/{message_id}"
                         
@@ -462,7 +467,7 @@ class MilitarySecureApp:
             try:
                 # Get actual Tor status
                 try:
-                    tor_status = self.tor_integration.get_status()
+                    tor_status = self.tor_integration.get_status() if self.tor_integration else {'active': False, 'fallback_mode': True}
                     
                     # For development mode, enhance status display
                     if not tor_status.get('active', False) and tor_status.get('fallback_mode', False):
@@ -588,7 +593,8 @@ class MilitarySecureApp:
             self.memory_manager.emergency_wipe()
             
             # Shutdown Tor
-            self.tor_integration.shutdown()
+            if self.tor_integration:
+                self.tor_integration.shutdown()
             
             # Shutdown IDS
             self.ids.shutdown()
@@ -628,7 +634,8 @@ class MilitarySecureApp:
         """Cleanup on application exit"""
         try:
             self.memory_manager.emergency_wipe()
-            self.tor_integration.shutdown()
+            if self.tor_integration:
+                self.tor_integration.shutdown()
             print("✅ Cleanup completed")
         except Exception as e:
             print(f"❌ Cleanup error: {e}")
@@ -636,12 +643,11 @@ class MilitarySecureApp:
     def run(self, debug=False, host='127.0.0.1', port=5001):
         """Run the secure application"""
         try:
-            # Initialize Tor integration
-            if self.tor_integration.initialize():
+            # Initialize Tor integration if available
+            if self.tor_integration and self.tor_integration.initialize():
                 print(f"🧅 Tor hidden service: {self.tor_integration.get_onion_url()}")
-            
-            # Start dummy traffic generation
-            self.tor_integration.generate_dummy_traffic()
+                # Start dummy traffic generation
+                self.tor_integration.generate_dummy_traffic()
             
             print(f"🚀 Military-grade secure messaging app starting...")
             print(f"📍 Local access: http://{host}:{port}")
