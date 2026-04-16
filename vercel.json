@@ -1,6 +1,5 @@
 {
   "buildCommand": "pip install -r requirements.txt",
-  "outputDirectory": ".",
   "framework": "flask",
   "functions": {
     "api/index.py": {
@@ -11,7 +10,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api/index.py"
+      "destination": "/api"
     }
   ]
 }
